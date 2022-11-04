@@ -4,7 +4,7 @@ import type { JoinLoaderData } from "~/routes/join";
 
 const JoinForm = () => {
   const { username, poll } = useLoaderData<JoinLoaderData>();
-  const transition = useTransition();
+  const transition = useTransition();  
 
   return (
     <Form className="flex flex-col space-y-4" action="/join" method="post">
@@ -42,7 +42,7 @@ const JoinForm = () => {
       <button
         className="mt-4 uppercase btn bg-accent2"
         type="submit"
-        disabled={transition.state === "submitting"}
+        disabled={transition.state !== "idle"}
       >
         Join
       </button>
