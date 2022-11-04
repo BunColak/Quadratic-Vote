@@ -35,10 +35,13 @@ export const action = async ({ request, params }: ActionArgs) => {
 
     await db.poll.update({ where: { id: pollId }, data: pollData })
 
-    options.map(async option => {
+    options.filter(option => option.id).map(async option => {
         await db.option.update({ where: { id: option.id! }, data: { text: option.text } })
     })
 
+    options.filter(option => !option.id).map(async option => {
+        await db.option.create({ data: { text: option.text, pollId: poll.id } })
+    })
 
     return redirect(`/poll/${pollId}`)
 }
