@@ -88,9 +88,8 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({
 
   return (
     <div
-      className={`w-4/5 lg:w-full mx-auto ${
-        options.length > 5 ? "h-[700px] lg:h-[800px]" : "h-[400px] lg:h-[600px]"
-      }`}
+      className={`w-4/5 lg:w-full mx-auto ${options.length > 5 ? "h-[700px] lg:h-[800px]" : "h-[400px] lg:h-[600px]"
+        }`}
     >
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
@@ -112,7 +111,7 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({
               />
             ))}
           </Pie>
-          {closed && <Tooltip content={renderCustomTooltip} />}
+          <Tooltip content={renderCustomTooltip} />
           <Legend fontSize="0.5rem" />
         </PieChart>
       </ResponsiveContainer>
