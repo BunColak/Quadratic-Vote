@@ -71,12 +71,12 @@ export const PollForm: React.FC<PollFormProps> = ({ poll, isLoggedIn = false }) 
           defaultValue={poll?.initialCredits}
         />
         {[...Array(questionCount)].map((_, i) => <div key={i}>
-          {poll ? <input hidden name={`options[${i}][id]`} defaultValue={poll?.options[i].id} /> : null}
+          {poll ? <input hidden name={`options[${i}][id]`} defaultValue={poll?.options[i] ? poll?.options[i].id : null} /> : null}
           <TextField
             name={`options[${i}][text]`}
             label={`Option ${i + 1}`}
             error={actionData?.errors.fieldErrors.options?.join(',')}
-            defaultValue={poll?.options[i].text}
+            defaultValue={poll?.options[i] ? poll?.options[i]?.text : ''}
           />
         </div>)}
         <div className="flex space-x-2">
