@@ -21,6 +21,7 @@ const JoinForm = () => {
           type="text"
           name="name"
           placeholder="Name"
+          required
         />
       </div>
 
