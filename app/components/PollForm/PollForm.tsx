@@ -46,13 +46,13 @@ export const PollForm: React.FC<PollFormProps> = ({ poll, isLoggedIn = false }) 
         {poll || isLoggedIn ? null : <TextField
           name="authorName"
           label='Your Name'
-          error={actionData?.errors.fieldErrors.authorName?.join(',')}
+          error={actionData?.errors?.fieldErrors.authorName?.join(',')}
           attr={{ required: true }}
         />}
         <TextField
           name="title"
           label='Title'
-          error={actionData?.errors.fieldErrors.title?.join(',')}
+          error={actionData?.errors?.fieldErrors.title?.join(',')}
           attr={{ required: true }}
           defaultValue={poll?.title}
         />
@@ -60,22 +60,22 @@ export const PollForm: React.FC<PollFormProps> = ({ poll, isLoggedIn = false }) 
           name="description"
           multiline
           label='Description'
-          error={actionData?.errors.fieldErrors.description?.join(',')}
+          error={actionData?.errors?.fieldErrors.description?.join(',')}
           defaultValue={poll?.description}
         />
         <TextField
           name='initialCredits'
           label="Initial Credits"
           type='number'
-          error={actionData?.errors.fieldErrors.initialCredits?.join(',')}
+          error={actionData?.errors?.fieldErrors.initialCredits?.join(',')}
           defaultValue={poll?.initialCredits}
         />
         {[...Array(questionCount)].map((_, i) => <div key={i}>
-          {poll ? <input hidden name={`options[${i}][id]`} defaultValue={poll?.options[i] ? poll?.options[i].id : null} /> : null}
+          {poll ? <input hidden name={`options[${i}][id]`} defaultValue={poll?.options[i] ? poll?.options[i].id : ''} /> : null}
           <TextField
             name={`options[${i}][text]`}
             label={`Option ${i + 1}`}
-            error={actionData?.errors.fieldErrors.options?.join(',')}
+            error={actionData?.errors?.fieldErrors.options?.join(',')}
             defaultValue={poll?.options[i] ? poll?.options[i]?.text : ''}
           />
         </div>)}
