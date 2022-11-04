@@ -27,8 +27,8 @@ export type RootLoaderData = {
   isLoggedIn: boolean
 };
 
-export const loader: LoaderFunction = async ({request}): Promise<RootLoaderData> => {
-  const userId = await getUserId(request)  
+export const loader: LoaderFunction = async ({ request }): Promise<RootLoaderData> => {
+  const userId = await getUserId(request)
 
   if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_REDIRECT_URI) {
     throw new Response("Please set Google credentials", { status: 400 });
@@ -54,9 +54,9 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <script
-          src="https://accounts.google.com/gsi/client"
           async
           defer
+          src="https://accounts.google.com/gsi/client"
         ></script>
         <LiveReload />
       </body>
