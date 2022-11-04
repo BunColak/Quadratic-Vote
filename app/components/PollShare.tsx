@@ -1,10 +1,10 @@
 import { useLoaderData } from "@remix-run/react";
 import React, { useState } from "react";
-import type { PollLoaderData } from "~/routes/poll/$pollId";
+import type { loader } from "~/routes/poll/$pollId";
 
 const PollShare = () => {
   const [displayState, setDisplayState] = useState(false);
-  const { currentUrl, poll } = useLoaderData<PollLoaderData>();
+  const { currentUrl, poll } = useLoaderData<typeof loader>();
   const url = `${currentUrl}/join?pollId=${poll.id}`
 
   const onClick = () => {

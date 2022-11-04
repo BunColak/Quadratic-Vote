@@ -1,9 +1,10 @@
 import type { Poll } from "@prisma/client";
+import type { SerializeFrom } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 import React from "react";
 
 type PollItemProps = {
-  poll: Poll;
+  poll: SerializeFrom<Poll>;
 };
 
 const PollItem: React.FC<PollItemProps> = ({ poll }) => {

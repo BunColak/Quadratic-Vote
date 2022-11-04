@@ -1,9 +1,9 @@
 import { useLoaderData } from "@remix-run/react";
 import React from "react";
-import type { PollLoaderData } from "~/routes/poll/$pollId";
+import type { loader } from "~/routes/poll/$pollId";
 
 const Voters = () => {
-  const { voters } = useLoaderData<PollLoaderData>();
+  const { voters } = useLoaderData<typeof loader>();
 
   return (
     <div className="p-10 mt-8 rounded bg-secondary3">
