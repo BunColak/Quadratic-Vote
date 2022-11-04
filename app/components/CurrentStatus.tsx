@@ -1,4 +1,5 @@
 import type { Option, Vote } from "@prisma/client";
+import type { SerializeFrom } from "@remix-run/node";
 import React, { useMemo } from "react";
 import type { PieLabel } from "recharts";
 import { Legend } from "recharts";
@@ -28,9 +29,9 @@ const COLORS = [
 ];
 
 type CurrentStatusProps = {
-  options: (Option & {
+  options: SerializeFrom<(Option & {
     vote: Vote[];
-  })[];
+  })[]>;
   closed?: boolean;
 };
 

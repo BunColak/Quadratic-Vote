@@ -1,26 +1,13 @@
-import type { Option, Poll, Vote, Voter } from "@prisma/client";
-import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import type { ActionFunction, LoaderArgs, MetaFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import React from "react";
 import { db } from "~/utils/prisma.server";
 import Voting from "~/components/Voting";
 import CurrentStatus from "~/components/CurrentStatus";
+import { useState } from "react";
 
-export type VoterLoaderData = {
-  voter: Voter & {
-    votes: Vote[];
-    poll: Poll;
-  };
-  options: (Option & {
-    vote: Vote[];
-  })[];
-};
 
-export const meta: MetaFunction = ({ data }) => ({
-  title: `Voting for ${data.voter.poll.title}`,
-});
-
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader = async ({ params }: LoaderArgs) => {
   const { voterId } = params;
 
   const voter = await db.voter.findFirst({
@@ -37,14 +24,27 @@ export const loader: LoaderFunction = async ({ params }) => {
     include: { vote: true },
   });
 
-  return { voter, options };
+  const optionsWithVoteCount = options.map(option => {
+    const myVotes = voter.votes.reduce(
+      (acc, val) => (val.optionId === option.id ? acc + 1 : acc),
+      0)
+    return { ...option, myVotes }
+  })
+
+  return json({ voter, options: optionsWithVoteCount });
 };
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => ({
+  title: `Voting for ${data.voter.poll.title}`,
+});
+
 
 const VotingPage = () => {
   const {
     options,
     voter: { credits, poll, name, id, votes },
-  } = useLoaderData<VoterLoaderData>();
+  } = useLoaderData<typeof loader>();
+  const [currentCredits, setCredits] = useState(credits)
 
   return (
     <div className="container p-2 mx-auto">
@@ -65,13 +65,13 @@ const VotingPage = () => {
         <p>{poll.description}</p>
       </div>
       <h3 className="text-3xl text-center lg:text-left">
-        Remaining Credits: <span className="text-secondary">{credits}</span>
+        Remaining Credits: <span className="text-secondary">{currentCredits}</span>
       </h3>
       <div className="mt-8 grid grid-cols-3 gap-8">
         <div className="p-8 rounded bg-secondary3 col-span-3 lg:col-span-1">
-          <Voting options={options} votes={votes} voterId={id} />
+          <Voting options={options} votes={votes} voterId={id} credits={currentCredits} updateCredits={setCredits} />
         </div>
-        <div className="relative p-8 rounded bg-secondary3 lg:col-span-2 col-span-3">
+        <div className="relative p-8 pb-16 rounded bg-secondary3 lg:col-span-2 col-span-3">
           <CurrentStatus options={options} closed />
           <div className="absolute text-right bottom-4 right-4">
             <h3 className="text-xl font-bold">{poll.title}</h3>

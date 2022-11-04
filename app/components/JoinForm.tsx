@@ -7,7 +7,7 @@ const JoinForm = () => {
   const transition = useTransition();  
 
   return (
-    <Form className="flex flex-col space-y-4" action="/join" method="post">
+    <Form reloadDocument className="flex flex-col space-y-4" action="/join" method="post">
       <div className="form-control">
         {!username && (
           <label className="label" htmlFor="name">

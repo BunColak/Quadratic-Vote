@@ -17,10 +17,13 @@
     "@remix-run/vercel": "^1.4.3",
     "@vercel/node": "^1.14.0",
     "daisyui": "^2.14.3",
+    "immer": "^9.0.16",
     "jsonwebtoken": "^8.5.1",
+    "qs": "^6.11.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "recharts": "^2.1.9",
+    "use-immer": "^0.7.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
@@ -29,6 +32,7 @@
     "@remix-run/serve": "^1.4.3",
     "@tailwindcss/typography": "^0.5.2",
     "@types/jsonwebtoken": "^8.5.8",
+    "@types/qs": "^6.9.7",
     "@types/react": "^17.0.24",
     "@types/react-dom": "^17.0.9",
     "autoprefixer": "^10.4.7",
