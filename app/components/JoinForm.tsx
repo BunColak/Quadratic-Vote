@@ -7,7 +7,7 @@ const JoinForm = () => {
   const transition = useTransition();  
 
   return (
-    <Form reloadDocument className="flex flex-col space-y-4" action="/join" method="post">
+    <Form className="flex flex-col space-y-4" action="/join" method="post">
       <div className="form-control">
         {!username && (
           <label className="label" htmlFor="name">
@@ -43,7 +43,7 @@ const JoinForm = () => {
       <button
         className="mt-4 uppercase btn bg-accent2"
         type="submit"
-        disabled={transition.state !== "idle"}
+        disabled={transition.state === "idle" || transition.state === 'submitting'}
       >
         Join
       </button>

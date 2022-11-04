@@ -13,11 +13,11 @@ const Navbar = () => {
     }
 
     const google = (window as any).google
-    google.accounts.id.initialize({
+    google?.accounts.id.initialize({
       client_id: data.clientId,
       callback: handleCallback
     });
-    google.accounts.id.renderButton(
+    google?.accounts.id.renderButton(
       document.getElementById("googleDiv"),
       { theme: "outline", size: "large" }  // customization attributes
     );
