@@ -17,7 +17,7 @@ export const action: ActionFunction = async ({ request }) => {
 
         if (option.change > 0) {
             await db.vote.createMany({ data: [...Array(option.change)].map(_ => ({ voterId, optionId })) })
-        } else {
+        } else if (option.change < 0) {
             const existingVotes = await db.vote.findMany({
                 where: { voterId, optionId },
                 select: { id: true },
@@ -33,6 +33,7 @@ export const action: ActionFunction = async ({ request }) => {
                 })
             })
         }
+
         return null
     })
 
