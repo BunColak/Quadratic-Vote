@@ -55,7 +55,6 @@ const VotingPage = () => {
         <h2 className="my-6 text-3xl">
           Voting for{" "}
           <Link
-            target="_blank"
             className="font-bold no-underline text-secondary"
             to={`/poll/${poll.id}`}
           >

@@ -16,7 +16,7 @@ export const action = async ({ request }: ActionArgs) => {
   const authorId = await getUserId(request);
   const text = await request.text();
 
-  const formValues = qs.parse(text)  
+  const formValues = qs.parse(text)
 
   const result = pollFormSchema.safeParse(formValues)
 
@@ -65,10 +65,18 @@ export const action = async ({ request }: ActionArgs) => {
   return redirect(`/poll/${newPoll.id}`);
 };
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const userId = await getUserId(request)
 
+  if (!userId) {
+    throw json("You need to be logged in to create polls.", {status: 403})
+  }
+
   return { userId }
+}
+
+export const CatchBoundary = () => {
+  return <div>Gotcha!</div>
 }
 
 const CreatePoll = () => {

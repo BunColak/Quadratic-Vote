@@ -36,7 +36,7 @@ const Voting: React.FC<VotingProps> = ({ options, votes, voterId, credits, updat
         fetcher.submit({ options: JSON.stringify(diffData), credits: String(credits) }, { action: '/vote?index', method: 'post' })
       }
 
-    }, 2000)
+    }, 1000)
 
     return () => {
       clearTimeout(timeout)
