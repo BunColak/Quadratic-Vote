@@ -1,26 +1,46 @@
-import type { ActionFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import qs from 'qs'
-import { db } from "~/utils/prisma.server";
+import type {ActionFunction} from "@remix-run/node";
+import {json} from "@remix-run/node";
+import {db} from "~/utils/prisma.server";
+import {requireUserId} from "~/utils/session.server";
+import {z} from "zod";
+import {voteDiffSchema} from "~/components/Voting";
 
-export const action: ActionFunction = async ({ request }) => {
-    const text = await request.text()
-    const data = qs.parse(text)
-    if (!data.options) {
-        return json("Error!")
+const voteSchema = z.object({
+    options: voteDiffSchema,
+    credits: z.number()
+})
+
+export const action: ActionFunction = async ({request}) => {
+    const authorId = await requireUserId(request)
+    const voter = await db.voter.findFirst({where: {authorId}})
+
+    if (!voter) {
+        throw json({error: "Voter not found."}, {status: 404})
     }
-    const options = JSON.parse(data.options as string) as { change: number, optionId: number, voterId: string }[]
+
+    const formData = await request.formData()
+    const stringData = formData.get('data')
+    if (!stringData || typeof stringData !== "string") {
+        throw json({error: "Bad Request"}, 400);
+    }
+
+    const data = voteSchema.parse(JSON.parse(stringData))
+    const options = data.options
     const credits = data.credits
 
     options.map(async (option) => {
-        const { voterId, optionId } = option
 
         if (option.change > 0) {
-            await db.vote.createMany({ data: [...Array(option.change)].map(_ => ({ voterId, optionId })) })
+            await db.vote.createMany({
+                data: [...Array(option.change)].map(_ => ({
+                    voterId: voter.id,
+                    optionId: option.optionId
+                }))
+            })
         } else if (option.change < 0) {
             const existingVotes = await db.vote.findMany({
-                where: { voterId, optionId },
-                select: { id: true },
+                where: {voter, optionId: option.optionId},
+                select: {id: true},
             });
             [...Array(Math.abs(option.change))].map(async (_, index) => {
                 const toDelete = existingVotes[existingVotes.length - index - 1]
@@ -28,7 +48,7 @@ export const action: ActionFunction = async ({ request }) => {
                     return
                 }
                 return db.vote.delete({
-                    where: { id: toDelete.id },
+                    where: {id: toDelete.id},
                     select: null
                 })
             })
@@ -37,7 +57,7 @@ export const action: ActionFunction = async ({ request }) => {
         return null
     })
 
-    await db.voter.update({ where: { id: options[0].voterId }, data: { credits: Number(credits) } })
+    await db.voter.update({where: {id: voter.id}, data: {credits: Number(credits)}})
 
     return null
 }

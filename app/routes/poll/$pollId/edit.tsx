@@ -6,7 +6,7 @@ import { useLoaderData } from '@remix-run/react';
 import React from 'react'
 import { PollForm, pollFormSchema } from '~/components/PollForm';
 import { db } from '~/utils/prisma.server'
-import { getUserId } from '~/utils/session.server';
+import { requireUserId } from '~/utils/session.server';
 
 export const loader = async ({ params }: LoaderArgs) => {
     const pollId = params.pollId
@@ -16,7 +16,7 @@ export const loader = async ({ params }: LoaderArgs) => {
 
 export const action = async ({ request, params }: ActionArgs) => {
     const pollId = params.pollId
-    const userId = await getUserId(request);
+    const userId = await requireUserId(request);
     const poll = await db.poll.findFirstOrThrow({ where: { id: pollId } })
 
     if (userId !== poll.authorId) {

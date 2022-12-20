@@ -68,7 +68,7 @@ const VotingPage = () => {
       </h3>
       <div className="mt-8 grid grid-cols-3 gap-8">
         <div className="p-8 rounded bg-secondary3 col-span-3 lg:col-span-1">
-          <Voting options={options} votes={votes} voterId={id} credits={currentCredits} updateCredits={setCredits} />
+          <Voting options={options} credits={currentCredits} updateCredits={setCredits} />
         </div>
         <div className="relative p-8 pb-16 rounded bg-secondary3 lg:col-span-2 col-span-3">
           <CurrentStatus options={options} closed />

@@ -18,7 +18,6 @@ export const pollFormSchema = z.object({
     id: z.preprocess(val => Number(val), z.number().nullable().optional()).optional(),
     text: z.string().min(2)
   })).min(2),
-  authorName: z.string().optional().nullable()
 })
 
 export const PollForm: React.FC<PollFormProps> = ({ poll, isLoggedIn = false }) => {
@@ -43,12 +42,6 @@ export const PollForm: React.FC<PollFormProps> = ({ poll, isLoggedIn = false }) 
         <div className="w-full p-4 bg-red-300" hidden={!actionData?.errors?.formErrors.length}>
           <h2>{actionData?.errors?.formErrors.join(',')}</h2>
         </div>
-        {poll || isLoggedIn ? null : <TextField
-          name="authorName"
-          label='Your Name'
-          error={actionData?.errors?.fieldErrors.authorName?.join(',')}
-          attr={{ required: true }}
-        />}
         <TextField
           name="title"
           label='Title'
