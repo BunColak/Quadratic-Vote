@@ -42,11 +42,11 @@ const Navbar = () => {
               Logout
             </Link>
           )}
-          {location.pathname === "/" ? (
+          {data.isLoggedIn ? (
             <Link to="/create" className="btn bg-accent3 whitespace-nowrap">
               Create New Poll
             </Link>
-          ) : null}
+          ) : <Link to='/' className="btn bg-gray-500 text-white whitespace-nowrap">Login to Create Polls</Link>}
         </div>
       </div>
     </div>

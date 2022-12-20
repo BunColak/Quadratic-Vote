@@ -1,11 +1,11 @@
-import type { Voter } from "@prisma/client";
 import type { ActionArgs, LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useCatch, useLoaderData } from "@remix-run/react";
 import qs from 'qs';
+import CenteredError from "~/components/CenteredError";
 import { PollForm, pollFormSchema } from "~/components/PollForm";
 import { db } from "~/utils/prisma.server";
-import { getUserId, getUserNameByOauthId } from "~/utils/session.server";
+import { getUserId, getUserNameByOauthId, requireUserId } from "~/utils/session.server";
 
 
 export const meta: MetaFunction = () => ({
@@ -13,10 +13,10 @@ export const meta: MetaFunction = () => ({
 });
 
 export const action = async ({ request }: ActionArgs) => {
-  const authorId = await getUserId(request);
+  const authorId = await requireUserId(request);
   const text = await request.text();
 
-  const formValues = qs.parse(text)  
+  const formValues = qs.parse(text)
 
   const result = pollFormSchema.safeParse(formValues)
 
@@ -40,35 +40,34 @@ export const action = async ({ request }: ActionArgs) => {
     },
   });
 
-  let voter: Voter | null = null
 
-  if (authorId) {
-    const name = await getUserNameByOauthId(authorId)
-    voter = await db.voter.create({
-      data: {
-        pollId: newPoll.id,
-        name,
-        authorId,
-        credits: newPoll!.initialCredits,
-      },
-    });
-  }
+  const name = await getUserNameByOauthId(authorId)
+  const voter = await db.voter.create({
+    data: {
+      pollId: newPoll.id,
+      name,
+      authorId,
+      credits: newPoll!.initialCredits,
+    },
+  });
 
-  if (validatedValues.authorName) {
-    voter = await db.voter.create({ data: { credits: validatedValues.initialCredits, name: validatedValues.authorName, poll: { connect: newPoll } } })
-  }
-
-  if (voter) {
-    return redirect(`/vote/${voter.id}`);
-  }
-
-  return redirect(`/poll/${newPoll.id}`);
+  return redirect(`/vote/${voter.id}`);
 };
 
-export const loader = async ({request}: LoaderArgs) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const userId = await getUserId(request)
 
+  if (!userId) {
+    throw json("You need to be logged in to create polls.", { status: 403 })
+  }
+
   return { userId }
+}
+
+export const CatchBoundary = () => {
+  const catchResponse = useCatch()
+
+  return <CenteredError text={catchResponse.data} redirectText="Go To Homepage" redirectTo="/" />
 }
 
 const CreatePoll = () => {

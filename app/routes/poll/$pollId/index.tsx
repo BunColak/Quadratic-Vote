@@ -4,7 +4,7 @@ import CurrentStatus from "~/components/CurrentStatus";
 import PollShare from "~/components/PollShare";
 import Voters from "~/components/Voters";
 import { db } from "~/utils/prisma.server";
-import { getUserId } from "~/utils/session.server";
+import { requireUserId } from "~/utils/session.server";
 
 export const meta: MetaFunction = ({ data }) => ({
     title: `Poll: ${data?.poll?.title}`,
@@ -14,7 +14,7 @@ export const loader = async ({
     params,
     request,
 }: LoaderArgs) => {
-    const oauthId = await getUserId(request);
+    const oauthId = await requireUserId(request);
     let myVotePageId: string | undefined = undefined;
     const poll = await db.poll.findFirst({
         where: { id: params.pollId },
@@ -36,9 +36,7 @@ export const loader = async ({
         orderBy: { vote: { _count: "desc" } },
     });
 
-    if (oauthId) {
-        myVotePageId = voters.find((voter) => voter.authorId === oauthId)?.id;
-    }
+    myVotePageId = voters.find((voter) => voter.authorId === oauthId)?.id;
 
     return { poll, voters, options, currentUrl: (new URL(request.url)).origin, myVotePageId, isAuthor };
 };
