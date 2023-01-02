@@ -7,16 +7,12 @@ import {voteDiffSchema} from "~/components/Voting";
 
 const voteSchema = z.object({
     options: voteDiffSchema,
-    credits: z.number()
+    credits: z.number(),
+    pollId: z.string()
 })
 
 export const action: ActionFunction = async ({request}) => {
     const authorId = await requireUserId(request)
-    const voter = await db.voter.findFirst({where: {authorId}})
-
-    if (!voter) {
-        throw json({error: "Voter not found."}, {status: 404})
-    }
 
     const formData = await request.formData()
     const stringData = formData.get('data')
@@ -27,6 +23,13 @@ export const action: ActionFunction = async ({request}) => {
     const data = voteSchema.parse(JSON.parse(stringData))
     const options = data.options
     const credits = data.credits
+    const pollId = data.pollId
+
+    const voter = await db.voter.findFirst({where: {authorId, pollId}})
+
+    if (!voter) {
+        throw json({error: "Voter not found."}, {status: 404})
+    }
 
     options.map(async (option) => {
 
