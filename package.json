@@ -28,6 +28,7 @@
     "zod": "^3.19.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.29.1",
     "@remix-run/dev": "^1.4.3",
     "@remix-run/eslint-config": "^1.4.3",
     "@remix-run/serve": "^1.4.3",
