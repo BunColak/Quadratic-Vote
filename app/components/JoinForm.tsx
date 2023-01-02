@@ -43,7 +43,7 @@ const JoinForm = () => {
       <button
         className="mt-4 uppercase btn bg-accent2"
         type="submit"
-        disabled={transition.state === "idle" || transition.state === 'submitting'}
+        disabled={transition.state === "loading" || transition.state === 'submitting'}
       >
         Join
       </button>
