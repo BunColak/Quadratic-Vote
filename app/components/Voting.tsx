@@ -92,7 +92,7 @@ const Voting: React.FC<VotingProps> = ({options, credits, updateCredits}) => {
                             <div className="flex items-center justify-between mt-4 space-x-4">
                                 <button
                                     onClick={decreaseVote(index)}
-                                    disabled={option.myVotes === 0}
+                                    disabled={option.myVotes === 0 || fetcher.state !== "idle"}
                                     className="relative w-8 h-8 p-0 btn bg-accent3"
                                 >
                                   <span
@@ -106,7 +106,7 @@ const Voting: React.FC<VotingProps> = ({options, credits, updateCredits}) => {
                                 <button
                                     onClick={increaseVote(index)}
                                     className="relative w-8 h-8 p-0 btn bg-accent3"
-                                    disabled={credits < (option.myVotes + 1) ** 2}
+                                    disabled={credits < (option.myVotes + 1) ** 2 || fetcher.state !== "idle"}
                                 >
                                   <span
                                       className="absolute text-2xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">

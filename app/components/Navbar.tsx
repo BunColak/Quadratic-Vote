@@ -7,6 +7,9 @@ const Navbar = () => {
   const location = useLocation();
   const fetcher = useFetcher()
 
+  console.log({data});
+  
+
   useEffect(() => {
     const handleCallback = (response: any) => {
       fetcher.submit(response, { action: '/auth/callback', method: 'post' })
@@ -24,7 +27,7 @@ const Navbar = () => {
   }, [data.clientId, fetcher])
 
   return (
-    <div
+    <nav
       className={`p-4 relative z-10 ${location.pathname !== "/" ? "bg-primary" : ""
         }`}
     >
@@ -46,10 +49,10 @@ const Navbar = () => {
             <Link to="/create" className="btn bg-accent3 whitespace-nowrap">
               Create New Poll
             </Link>
-          ) : <Link to='/' className="btn bg-gray-500 text-white whitespace-nowrap">Login to Create Polls</Link>}
+          ) : <Link to='/' className="btn bg-gray-500 text-white whitespace-nowrap" data-testid="login-warning">Login to Create Polls</Link>}
         </div>
       </div>
-    </div>
+    </nav>
   );
 };
 

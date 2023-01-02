@@ -29,6 +29,7 @@ export const loader: LoaderFunction = async ({
           { voters: { some: { authorId: oauthId } } },
         ],
       },
+      orderBy: {id: 'desc'}
     });
     username = await getUserNameByOauthId(oauthId);
   }
