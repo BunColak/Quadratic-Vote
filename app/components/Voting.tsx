@@ -38,7 +38,7 @@ const Voting: React.FC<VotingProps> = ({options, credits, updateCredits}) => {
     const submitVote = async () => {
         if (diffData.length > 0) {
             const formData = new FormData()
-            formData.set('data', JSON.stringify({options: diffData, credits}))
+            formData.set('data', JSON.stringify({options: diffData, credits, pollId: options[0].pollId }))
             fetcher.submit(formData, {
                 action: '/vote?index',
                 method: 'post'
