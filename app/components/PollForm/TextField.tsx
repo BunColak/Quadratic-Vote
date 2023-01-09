@@ -1,34 +1,37 @@
+import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, Textarea } from '@chakra-ui/react'
 import React from 'react'
 
 type TextFieldProps = {
     label: string
     name: string
     multiline?: boolean
+    helperText?: string
     error?: string
     type?: React.HTMLInputTypeAttribute
     attr?: React.InputHTMLAttributes<HTMLInputElement>
     defaultValue?: string | number | null
 }
 
-export const TextField: React.FC<TextFieldProps> = ({ error, defaultValue,  multiline, label, name, type = 'text', attr }) => {
+export const TextField: React.FC<TextFieldProps> = ({ error, defaultValue, multiline, helperText, label, name, type = 'text', attr }) => {
     return (
-        <div className="form-control">
-            <label htmlFor={name} className="label">
+        <FormControl isInvalid={!!error} isRequired={attr?.required} mt={6}>
+            <FormLabel>
                 {label}
-            </label>
+            </FormLabel>
             {multiline
                 ?
-                <textarea className="input" name={name} defaultValue={defaultValue || undefined} />
+                <Textarea name={name} defaultValue={defaultValue || undefined} />
                 :
-                <input className="input" type={type} name={name} {...attr} defaultValue={defaultValue || undefined}/>
+                <Input type={type} name={name} {...attr} defaultValue={defaultValue || undefined} size="md" />
             }
-            <p
-                className="mt-0 text-red-500 label label-text-alt"
-                hidden={!error}
-            >
+            {error ? <FormErrorMessage>
                 {error}
-            </p>
-        </div>
+            </FormErrorMessage>
+                :
+                <FormHelperText>
+                    {helperText}
+                </FormHelperText>}
+        </FormControl>
     )
 }
 

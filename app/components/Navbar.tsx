@@ -1,10 +1,11 @@
-import { Link, useFetcher, useLoaderData, useLocation } from "@remix-run/react";
+import { AddIcon } from "@chakra-ui/icons";
+import { Box, Link, Img, Heading, Container, Flex, Spacer, Button, HStack } from "@chakra-ui/react";
+import { Link as RemixLink, useFetcher, useLoaderData } from "@remix-run/react";
 import React, { useEffect } from "react";
 import type { RootLoaderData } from "~/root";
 
 const Navbar = () => {
   const data = useLoaderData<RootLoaderData>();
-  const location = useLocation();
   const fetcher = useFetcher()
 
   useEffect(() => {
@@ -24,32 +25,49 @@ const Navbar = () => {
   }, [data.clientId, fetcher])
 
   return (
-    <nav
-      className={`p-4 relative z-10 ${location.pathname !== "/" ? "bg-primary" : ""
-        }`}
-    >
-      <div className="container flex flex-wrap items-center justify-center mx-auto lg:justify-start">
-        <div className="flex-grow">
-          <Link to="/" className="flex py-2 text-3xl space-x-2">
-            <img src="/qv_logo.png" alt="Quadratic Vote" className="h-10" />
-            <span className="relative hidden text-secondary3 md:inline">Quadratic Vote</span>
+    <Box as='nav' w='full' h="16" display="flex" alignItems="center">
+      <Container minW="container.xl">
+        <Flex >
+          <Link as={RemixLink} to="/" display="flex" alignItems="center">
+            <Img display="inline" src="/qv_logo.png" alt="Quadratic Vote" h="8" />
+            <Heading fontSize="2xl" ml='2'>Quadratic Vote</Heading>
           </Link>
+          <Spacer />
+          <HStack spacing="6">
+            <div id="googleDiv" hidden={data.isLoggedIn}></div>
+            {data.isLoggedIn && (
+              <Button as={RemixLink} to="/auth/logout" variant="link" colorScheme="red">
+                Logout
+              </Button>
+            )}
+            {data.isLoggedIn ? (
+              <Button as={RemixLink} to="/create" colorScheme="blue" rightIcon={<AddIcon fontSize="xs" />} variant='solid'>
+                New Poll
+              </Button>
+            ) : <Button as={RemixLink} to="/auth/login">Login to Create Polls</Button>}
+          </HStack>
+        </Flex>
+        {/* <div>
+        <div>
+          
         </div>
-        <div className="flex items-center flex-grow-0 md:space-x-4 space-x-2 md:mt-0">
+        <div>
           <div id="googleDiv" hidden={data.isLoggedIn}></div>
           {data.isLoggedIn && (
-            <Link to="/auth/logout" className="btn bg-secondary3">
+            <Link to="/auth/logout" >
               Logout
             </Link>
           )}
           {data.isLoggedIn ? (
-            <Link to="/create" className="btn bg-accent3 whitespace-nowrap">
+            <Link to="/create" >
               Create New Poll
             </Link>
-          ) : <Link to='/' className="btn bg-gray-500 text-white whitespace-nowrap" data-testid="login-warning">Login to Create Polls</Link>}
+          ) : <Link to='/' >Login to Create Polls</Link>}
         </div>
-      </div>
-    </nav>
+      </div> */}
+      </Container>
+
+    </Box>
   );
 };
 
