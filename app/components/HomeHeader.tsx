@@ -1,16 +1,17 @@
 import { useLoaderData } from "@remix-run/react";
 import React from "react";
 import type { HomeLoaderData } from "~/routes";
+import {Text} from "@chakra-ui/react";
 
 const HomeHeader = () => {
   const { username } = useLoaderData<HomeLoaderData>();
   return (
-    <div className="text-center">
-      <h1 className="font-serif text-5xl text-secondary3">
-        Welcome <span className="text-accent2">{username}</span> to Quadratic
+    <div>
+      <Text fontSize="2xl">
+        Welcome <span>{username}</span> to Quadratic
         Voting!
-      </h1>
-      <p className="mt-9">
+      </Text>
+      <p>
         This is a simple website that provides a simple way to create quadratic
         polls.
       </p>

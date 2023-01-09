@@ -7,9 +7,6 @@ const Navbar = () => {
   const location = useLocation();
   const fetcher = useFetcher()
 
-  console.log({data});
-  
-
   useEffect(() => {
     const handleCallback = (response: any) => {
       fetcher.submit(response, { action: '/auth/callback', method: 'post' })
