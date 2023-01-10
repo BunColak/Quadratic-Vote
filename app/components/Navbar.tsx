@@ -44,7 +44,7 @@ const Navbar = () => {
               <Button as={RemixLink} to="/create" colorScheme="blue" rightIcon={<AddIcon fontSize="xs" />} variant='solid'>
                 New Poll
               </Button>
-            ) : <Button as={RemixLink} to="/auth/login">Login to Create Polls</Button>}
+            ) : <Button disabled>Login to Create Polls</Button>}
           </HStack>
         </Flex>
       </Container>

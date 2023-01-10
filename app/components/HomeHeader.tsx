@@ -8,7 +8,7 @@ const HomeHeader = () => {
     const { username } = useLoaderData<HomeLoaderData>();
     return (
         <Box as='section'>
-            <Center pt={['12','48']}>
+            <Center pt={['12', '48']}>
                 <Container maxW="container.md">
                     <Heading fontSize="6xl" textAlign="center">
                         Welcome <Text as='span' color="blue.500">{username}</Text> to <Text as='span' color='teal.500'>Quadratic
@@ -19,7 +19,7 @@ const HomeHeader = () => {
                         polls.
                     </Text>
                     <Center>
-                        <SimpleGrid mt='5' spacing={[5,10]} columns={[1,2]}>
+                        <SimpleGrid mt='5' spacing={[5, 10]} columns={[1, 2]}>
                             {username ?
                                 <>
                                     <Button as={Link} to="/polls" size="lg" colorScheme="teal" rightIcon={<ArrowForwardIcon />}>Go to existing pools</Button>
@@ -27,8 +27,7 @@ const HomeHeader = () => {
                                 </>
                                 :
                                 <>
-                                    <Button size='lg' colorScheme="blue">What is a "Quadratic Poll?"</Button>
-                                    <Button size="lg" colorScheme="teal">Log In</Button>
+                                    <Button as='a' href='https://en.wikipedia.org/wiki/Quadratic_voting' target='_blank' size='lg' colorScheme="blue">What is a "Quadratic Poll?"</Button>
                                 </>
                             }
                         </SimpleGrid>
