@@ -1,6 +1,6 @@
 
 import { AddIcon, ArrowForwardIcon } from "@chakra-ui/icons";
-import { Box, Button, Center, Container, Heading, HStack, SimpleGrid, Text } from "@chakra-ui/react";
+import { Box, Button, Center, Container, Heading, SimpleGrid, Text } from "@chakra-ui/react";
 import { Link, useLoaderData } from "@remix-run/react";
 import type { HomeLoaderData } from "~/routes";
 
@@ -8,7 +8,7 @@ const HomeHeader = () => {
     const { username } = useLoaderData<HomeLoaderData>();
     return (
         <Box as='section'>
-            <Center pt='48'>
+            <Center pt={['12','48']}>
                 <Container maxW="container.md">
                     <Heading fontSize="6xl" textAlign="center">
                         Welcome <Text as='span' color="blue.500">{username}</Text> to <Text as='span' color='teal.500'>Quadratic
@@ -22,7 +22,7 @@ const HomeHeader = () => {
                         <SimpleGrid mt='5' spacing={[5,10]} columns={[1,2]}>
                             {username ?
                                 <>
-                                    <Button as={Link} to="/poll" size="lg" colorScheme="teal" rightIcon={<ArrowForwardIcon />}>Go to existing pools</Button>
+                                    <Button as={Link} to="/polls" size="lg" colorScheme="teal" rightIcon={<ArrowForwardIcon />}>Go to existing pools</Button>
                                     <Button as={Link} to="/create" size='lg' colorScheme="blue" rightIcon={<AddIcon />}>Create New Poll</Button>
                                 </>
                                 :

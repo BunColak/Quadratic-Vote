@@ -1,7 +1,7 @@
 import { Box, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { useLoaderData } from "@remix-run/react";
 import React from "react";
-import type { loader } from "~/routes/poll/$pollId";
+import type { loader } from "~/routes/polls/$pollId";
 
 const Voters = () => {
   const { voters } = useLoaderData<typeof loader>();

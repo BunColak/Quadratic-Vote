@@ -1,10 +1,10 @@
 import { AddIcon } from "@chakra-ui/icons";
-import { Box, Button, Center, Divider, Flex, Heading, IconButton, Spacer } from "@chakra-ui/react";
+import { Button, Divider, Flex, Heading, Spacer } from "@chakra-ui/react";
 import { Form, useActionData, useTransition } from "@remix-run/react";
 import React, { useState } from "react";
 import { z } from "zod";
 import type { action as createAction } from "~/routes/create";
-import type { PollEditLoaderData } from "~/routes/poll/$pollId/edit";
+import type { PollEditLoaderData } from "~/routes/polls/$pollId/edit";
 import PollOption from "./PollOption";
 import { TextField } from "./TextField";
 
@@ -45,7 +45,7 @@ export const PollForm: React.FC<PollFormProps> = ({
   const removeQuestion = () => setQuestionCount((r) => r - 1);
 
   return (
-    <Form method="post" action={poll ? `/poll/${poll.id}/edit` : "/create"}>
+    <Form method="post" action={poll ? `/polls/${poll.id}/edit` : "/create"}>
       <div>
         <Heading>
           {poll ? `Editing poll ${poll.title}` : "Create a New Poll"}

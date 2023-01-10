@@ -1,5 +1,5 @@
 import { ArrowForwardIcon } from "@chakra-ui/icons";
-import { Box, Button, Grid, GridItem, Heading, HStack, Text } from "@chakra-ui/react";
+import { Box, Button, Heading, HStack, SimpleGrid, Text } from "@chakra-ui/react";
 import type { LoaderArgs, MetaFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import CurrentStatus from "~/components/CurrentStatus";
@@ -65,23 +65,22 @@ const PollDetails = () => {
                 <PollShare />
             </div>
             <Box mt={8}>
-                <Grid templateColumns="repeat(2, 1fr)" gap={6}>
-                    <GridItem colSpan={1}>
-                        <CurrentStatus options={options} />
-                    </GridItem>
-                    <GridItem>
+                <SimpleGrid columns={[1, 2]} gap={6}>
+                    <CurrentStatus options={options} />
+                    <Box>
                         <Button
                             size="lg"
+                            w={['full', 'auto']}
                             colorScheme="blue"
                             rightIcon={<ArrowForwardIcon />}
                             as={Link}
-                            to={`/vote/${myVotePageId}`}
+                            to={`vote/${myVotePageId}`}
                         >
                             Go to voting
                         </Button>
                         <Voters />
-                    </GridItem>
-                </Grid>
+                    </Box>
+                </SimpleGrid>
 
             </Box>
         </div>

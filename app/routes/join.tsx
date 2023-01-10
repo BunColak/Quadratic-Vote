@@ -1,7 +1,7 @@
-import type { Poll } from "@prisma/client";
+import { Box, Center, Container, Heading, Text } from "@chakra-ui/react";
 import type {
   ActionFunction,
-  LoaderFunction,
+  LoaderArgs,
   MetaFunction
 } from "@remix-run/node";
 import {
@@ -15,40 +15,38 @@ import JoinForm from "~/components/JoinForm";
 import { db } from "~/utils/prisma.server";
 import { getUserId, getUserNameByOauthId, requireUserId } from "~/utils/session.server";
 
-export type JoinLoaderData = {
-  poll: Poll | null;
-  username: string | null;
-};
 
 export const meta: MetaFunction = ({ data }) => ({
   title: `Joining Poll ${data?.poll?.title || " "}`,
 });
 
-export const loader: LoaderFunction = async ({
+export const loader = async ({
   request,
-}): Promise<JoinLoaderData> => {
+}: LoaderArgs) => {
   const userId = await getUserId(request);
 
+  // TODO Test
   if (!userId) {
     throw json("You need to login to join a poll.", { status: 403 })
   }
-
-  let poll: Poll | null = null;
 
   const username = await getUserNameByOauthId(userId);
   const url = new URL(request.url);
   const pollId = url.searchParams.get("pollId");
 
-  if (!pollId) return { poll, username };
+  // TODO Test
+  if (!pollId) throw json("Poll not found!", { status: 404 });
 
-  poll = await db.poll.findFirst({
+  const poll = await db.poll.findFirst({
     where: { id: pollId },
   });
 
+  // TODO Test
   if (!poll) throw json("Poll not found!", { status: 404 });
 
+  // TODO Test
   const userAlreadyInPoll = (await db.voter.count({ where: { authorId: userId, pollId: pollId } })) > 0
-  if (userAlreadyInPoll) throw redirect(`/poll/${pollId}`)
+  if (userAlreadyInPoll) throw redirect(`/polls/${pollId}`)
 
   return {
     poll,
@@ -84,30 +82,22 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 const Join = () => {
-  const { poll, username } = useLoaderData<JoinLoaderData>();
+  const { poll, username } = useLoaderData<typeof loader>();
 
   return (
-    <div className="container max-w-3xl p-4 mx-auto">
-      <div className="w-full prose">
-        <div className="my-6 text-center">
-          {username && (
-            <h1>
-              Hi <span className="text-primary3">{username}</span>
-            </h1>
-          )}
-          <h1>
-            {poll ? (
-              <span>
-                Joining Poll <span className="text-primary3">{poll.title}</span>
-              </span>
-            ) : (
-              <span>Please fill in the form.</span>
-            )}
-          </h1>
-        </div>
+    <Container>
+      <Box textAlign='center' mt={8}>
+        <Heading>
+          Hi <Text as='span' color='blue.500'>{username}</Text>
+        </Heading>
+        <Heading fontSize='2xl' mt={4}>
+            Joining Poll <Text as='span' color='teal.500'>{poll.title}</Text>
+        </Heading>
+      </Box>
+      <Center mt={6}>
         <JoinForm />
-      </div>
-    </div>
+      </Center>
+    </Container>
   );
 };
 

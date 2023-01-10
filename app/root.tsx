@@ -1,7 +1,7 @@
 // root.tsx
 import React, { useContext, useEffect } from 'react'
 import { withEmotionCache } from '@emotion/react'
-import { Box, ChakraProvider, ThemeProvider } from '@chakra-ui/react'
+import { Box, ChakraProvider } from '@chakra-ui/react'
 import {
     Links,
     LiveReload,
@@ -26,6 +26,7 @@ export const meta: MetaFunction = () => ({
     charset: 'utf-8',
     title: 'Quadratic Vote',
     viewport: 'width=device-width,initial-scale=1',
+    description: 'A simple website to create quadratic polls.'
 });
 
 export let links: LinksFunction = () => {

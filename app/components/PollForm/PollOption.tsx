@@ -1,7 +1,7 @@
-import { AddIcon, MinusIcon } from "@chakra-ui/icons";
-import { Box, Flex, IconButton } from "@chakra-ui/react";
+import { MinusIcon } from "@chakra-ui/icons";
+import { Flex, IconButton } from "@chakra-ui/react";
 import { useTransition } from "@remix-run/react";
-import React, { useState } from "react";
+import React from "react";
 import { TextField } from "./TextField";
 
 type PollOptionProps = {

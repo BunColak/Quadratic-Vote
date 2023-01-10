@@ -1,4 +1,4 @@
-import { Box, Heading, Text } from "@chakra-ui/react";
+import { Box, Heading, Text, useBreakpointValue } from "@chakra-ui/react";
 import type { Option, Vote } from "@prisma/client";
 import type { SerializeFrom } from "@remix-run/node";
 import React, { useMemo } from "react";
@@ -45,6 +45,7 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({
   const graphOptions = useMemo(() => {
     return options.map((op) => ({ name: op.text, votes: op.vote.length }));
   }, [options]);
+  const radiusAdjust = useBreakpointValue([0, 5])  
 
   const renderCustomizedLabel: PieLabel = ({
     cx,
@@ -63,12 +64,12 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({
     return percent > 0 ? (
       <>
         <text
-          x={x - 5}
-          y={y - 5}
+          x={x - (radiusAdjust || 0)}
+          y={y - (radiusAdjust || 0)}
           fill="white"
           textAnchor={x > cx ? "start" : "end"}
           dominantBaseline="central"
-         
+          fontSize='0.75rem'
         >
           {`${(percent * 100).toFixed(0)}%`}
         </text>
@@ -79,7 +80,7 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({
   const renderCustomTooltip = (props: any) => {
     return (
       <Box backgroundColor="white" outline="none" p={2} rounded='md' shadow="md">
-        <Heading fontSize="xl">{props?.payload[0]?.name}</Heading>
+        <Heading fontSize="lg">{props?.payload[0]?.name}</Heading>
         <Text>
           {props?.payload[0]?.value} votes
         </Text>

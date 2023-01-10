@@ -44,7 +44,7 @@ export const action = async ({ request, params }: ActionArgs) => {
         await db.option.create({ data: { text: option.text, pollId: poll.id } })
     })
 
-    return redirect(`/poll/${pollId}`)
+    return redirect(`/polls/${pollId}`)
 }
 
 export type PollEditLoaderData = SerializeFrom<typeof loader>

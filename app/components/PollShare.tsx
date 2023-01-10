@@ -1,7 +1,7 @@
 import { Alert, AlertDescription, Icon, AlertTitle, Box, Text } from "@chakra-ui/react";
 import { useLoaderData } from "@remix-run/react";
 import React from "react";
-import type { loader } from "~/routes/poll/$pollId";
+import type { loader } from "~/routes/polls/$pollId";
 import { useToast } from '@chakra-ui/react'
 
 const PollShare = () => {
@@ -22,7 +22,7 @@ const PollShare = () => {
   return (
     <Alert
       my={6}
-      w="xl"
+      w={['full','50%']}
       cursor="pointer"
       _hover={{
         backgroundColor: "blue.200"

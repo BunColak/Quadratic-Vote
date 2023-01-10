@@ -26,11 +26,11 @@ const Navbar = () => {
 
   return (
     <Box as='nav' w='full' h="16" display="flex" alignItems="center">
-      <Container minW="container.xl">
+      <Container maxW={['container.md', 'container.lg', 'container.xl']}>
         <Flex >
           <Link as={RemixLink} to="/" display="flex" alignItems="center">
             <Img display="inline" src="/qv_logo.png" alt="Quadratic Vote" h="8" />
-            <Heading fontSize="2xl" ml='2'>Quadratic Vote</Heading>
+            <Heading fontSize={['md',"2xl"]} ml='2'>Quadratic Vote</Heading>
           </Link>
           <Spacer />
           <HStack spacing="6">
@@ -47,24 +47,6 @@ const Navbar = () => {
             ) : <Button as={RemixLink} to="/auth/login">Login to Create Polls</Button>}
           </HStack>
         </Flex>
-        {/* <div>
-        <div>
-          
-        </div>
-        <div>
-          <div id="googleDiv" hidden={data.isLoggedIn}></div>
-          {data.isLoggedIn && (
-            <Link to="/auth/logout" >
-              Logout
-            </Link>
-          )}
-          {data.isLoggedIn ? (
-            <Link to="/create" >
-              Create New Poll
-            </Link>
-          ) : <Link to='/' >Login to Create Polls</Link>}
-        </div>
-      </div> */}
       </Container>
 
     </Box>
