@@ -10,7 +10,7 @@ type CenteredErrorProps = {
 
 const CenteredError: React.FC<CenteredErrorProps> = ({ text, redirectTo, redirectText }) => {
     return (
-        <Box my='20'>
+        <Box my='20' data-testid='error-page'>
             <Heading textAlign='center'>{text}</Heading>
             <Center mt={6}>
                 {redirectTo ?

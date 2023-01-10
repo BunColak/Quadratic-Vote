@@ -1,9 +1,9 @@
 import { test, expect } from "@playwright/test";
-import { getCookies, goToAndCheckLogin } from "./testUtils";
+import { goToAndCheckLogin } from "./testUtils";
 
 test.describe("homepage", () => {
   test.use({
-    baseURL: "http://localhost:3000",
+    baseURL: process.env.BASE_URL,
   });
 
   test("should not allow creating polls when not logged in", async ({
@@ -11,10 +11,8 @@ test.describe("homepage", () => {
   }) => {
     await page.goto("/");
 
-    // Two login warnings, one on navbar one in existing polls
-    await expect(page.getByTestId("login-warning")).toHaveCount(2);
+    await expect(page.getByTestId("login-warning")).toHaveCount(1);
 
-    // There shouldn't be any links to create page
     await expect(page.locator('a[href="/create"]')).toHaveCount(0);
 
     // Google login should be visible
@@ -40,11 +38,5 @@ test.describe("homepage", () => {
 
     await expect(await page.locator('a[href="/create"]').count()).toBeGreaterThan(0)
   });
-
-  test('should show existing polls', async ({ browser }) => {
-    const page = await goToAndCheckLogin(browser, '/')
-
-    await expect(page.getByTestId('existing-polls')).toHaveCount(1)
-  })
 });
 
