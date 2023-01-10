@@ -19,7 +19,7 @@ const HomeHeader = () => {
                         polls.
                     </Text>
                     <Center>
-                        <SimpleGrid mt='5' spacing={[5, 10]} columns={[1, 2]}>
+                        <SimpleGrid mt='5' spacing={[5, 10]} columns={[1, username ? 2 : 1]}>
                             {username ?
                                 <>
                                     <Button as={Link} to="/polls" size="lg" colorScheme="teal" rightIcon={<ArrowForwardIcon />}>Go to existing pools</Button>
