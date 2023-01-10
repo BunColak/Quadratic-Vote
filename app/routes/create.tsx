@@ -1,3 +1,4 @@
+import { Container } from "@chakra-ui/react";
 import type { ActionArgs, LoaderArgs, MetaFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useCatch, useLoaderData } from "@remix-run/react";
@@ -72,7 +73,9 @@ export const CatchBoundary = () => {
 
 const CreatePoll = () => {
   const loaderData = useLoaderData<typeof loader>()
-  return <PollForm isLoggedIn={!!loaderData.userId} />
+  return <Container maxW="container.md" pt="10" pb={20}>
+    <PollForm isLoggedIn={!!loaderData.userId} />
+  </Container>
 };
 
 export default CreatePoll;

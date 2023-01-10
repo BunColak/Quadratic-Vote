@@ -1,52 +1,39 @@
+import { Button } from "@chakra-ui/react";
 import { Form, useLoaderData, useTransition } from "@remix-run/react";
 import React from "react";
-import type { JoinLoaderData } from "~/routes/join";
+import type { loader } from "~/routes/join";
 
 const JoinForm = () => {
-  const { username, poll } = useLoaderData<JoinLoaderData>();
-  const transition = useTransition();  
+  const { username, poll } = useLoaderData<typeof loader>();
+  const transition = useTransition();
 
   return (
-    <Form className="flex flex-col space-y-4" action="/join" method="post">
-      <div className="form-control">
-        {!username && (
-          <label className="label" htmlFor="name">
-            Your Name
-          </label>
-        )}
+    <Form method='post'>
+      <div>
         <input
-          hidden={!!username}
-          defaultValue={username || ""}
-          className="input"
+          hidden
+          defaultValue={username}
           type="text"
           name="name"
           placeholder="Name"
           required
         />
       </div>
-
-      <div className="form-control" hidden={!!poll}>
-        {!poll && (
-          <label className="label" htmlFor="pollId">
-            Poll ID
-          </label>
-        )}
+      <div hidden>
         <input
-          hidden={!!poll}
-          className="input"
+          hidden
           name="pollId"
-          defaultValue={poll?.id}
+          defaultValue={poll.id}
           placeholder="Poll ID"
         />
       </div>
-
-      <button
-        className="mt-4 uppercase btn bg-accent2"
+      <Button
+        colorScheme='blue'
         type="submit"
         disabled={transition.state === "loading" || transition.state === 'submitting'}
       >
         Join
-      </button>
+      </Button>
     </Form>
   );
 };

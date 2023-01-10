@@ -1,3 +1,5 @@
+import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { Box, Button, Heading, HStack, SimpleGrid, Text } from "@chakra-ui/react";
 import type { LoaderArgs, MetaFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import CurrentStatus from "~/components/CurrentStatus";
@@ -45,32 +47,42 @@ const PollDetails = () => {
     const { poll, options, myVotePageId, isAuthor } = useLoaderData<typeof loader>();
 
     return (
-        <div className="container p-4 mx-auto">
-            <div className="prose">
-                <h1 className="my-8 text-center text-secondary">{poll.title}</h1>
-                <PollShare />
-            </div>
-            <div className="grid grid-cols-12 min-h-[50vh] mt-[5vh]">
-                <div className="col-span-12 lg:col-span-6">
-                    <CurrentStatus options={options} />
-                </div>
-                <div className="flex flex-col col-span-12 prose lg:col-span-6 prose-p:m-0 prose-h3:m-0 prose-table:m-0">
-                    <p>{poll.description}</p>
-                    <Link
-                        className="block mt-4 text-center no-underline uppercase btn bg-accent3 lg:order-2"
-                        to={`/vote/${myVotePageId}`}
-                    >
-                        My Vote Page For {poll.title}
-                    </Link>
-                    {isAuthor && <Link
-                        className="block mt-4 text-center no-underline uppercase btn bg-primary text-white lg:order-2"
+        <div>
+            <div>
+                <HStack spacing={6}>
+                    <Heading>{poll.title}</Heading>
+                    {isAuthor && <Button
+                        as={Link}
                         to={`edit`}
+                        colorScheme="teal"
                     >
                         Edit Poll
-                    </Link>}
-                    <Voters />
-                </div>
+                    </Button>}
+                </HStack>
+                <Text color="gray.400" mt={2}>
+                    {poll.description}
+                </Text>
+                <PollShare />
             </div>
+            <Box mt={8}>
+                <SimpleGrid columns={[1, 2]} gap={6}>
+                    <CurrentStatus options={options} />
+                    <Box>
+                        <Button
+                            size="lg"
+                            w={['full', 'auto']}
+                            colorScheme="blue"
+                            rightIcon={<ArrowForwardIcon />}
+                            as={Link}
+                            to={`vote/${myVotePageId}`}
+                        >
+                            Go to voting
+                        </Button>
+                        <Voters />
+                    </Box>
+                </SimpleGrid>
+
+            </Box>
         </div>
     );
 };

@@ -1,3 +1,4 @@
+import { Box, Heading, Text, useBreakpointValue } from "@chakra-ui/react";
 import type { Option, Vote } from "@prisma/client";
 import type { SerializeFrom } from "@remix-run/node";
 import React, { useMemo } from "react";
@@ -44,6 +45,7 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({
   const graphOptions = useMemo(() => {
     return options.map((op) => ({ name: op.text, votes: op.vote.length }));
   }, [options]);
+  const radiusAdjust = useBreakpointValue([0, 5])  
 
   const renderCustomizedLabel: PieLabel = ({
     cx,
@@ -62,12 +64,12 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({
     return percent > 0 ? (
       <>
         <text
-          x={x - 5}
-          y={y - 5}
+          x={x - (radiusAdjust || 0)}
+          y={y - (radiusAdjust || 0)}
           fill="white"
           textAnchor={x > cx ? "start" : "end"}
           dominantBaseline="central"
-          className="text-sm md:text-md"
+          fontSize='0.75rem'
         >
           {`${(percent * 100).toFixed(0)}%`}
         </text>
@@ -77,20 +79,17 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({
 
   const renderCustomTooltip = (props: any) => {
     return (
-      <div className="p-2 rounded shadow bg-secondary3">
-        <h5 className="font-bold">{props?.payload[0]?.name}</h5>
-        <p className="text-sm text-secondary">
+      <Box backgroundColor="white" outline="none" p={2} rounded='md' shadow="md">
+        <Heading fontSize="lg">{props?.payload[0]?.name}</Heading>
+        <Text>
           {props?.payload[0]?.value} votes
-        </p>
-      </div>
+        </Text>
+      </Box>
     );
   };
 
   return (
-    <div
-      className={`w-4/5 lg:w-full mx-auto ${options.length > 5 ? "h-[700px] lg:h-[800px]" : "h-[400px] lg:h-[600px]"
-        }`}
-    >
+    <Box h={['400px', '600px']} w={'full'}>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
@@ -104,7 +103,6 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({
           >
             {graphOptions.map((entry, index) => (
               <Cell
-                className="testy-test"
                 key={`cell-${index}`}
                 fill={COLORS[index % COLORS.length]}
                 stroke="transparent"
@@ -115,7 +113,7 @@ const CurrentStatus: React.FC<CurrentStatusProps> = ({
           <Legend fontSize="0.5rem" />
         </PieChart>
       </ResponsiveContainer>
-    </div>
+    </Box>
   );
 };
 

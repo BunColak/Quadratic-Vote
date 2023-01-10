@@ -1,102 +1,111 @@
-import { Form, useActionData, useTransition } from '@remix-run/react'
-import React, { useState } from 'react'
-import { z } from 'zod'
-import type { action as createAction } from '~/routes/create';
-import type { PollEditLoaderData } from '~/routes/poll/$pollId/edit';
-import { TextField } from './TextField';
+import { AddIcon } from "@chakra-ui/icons";
+import { Button, Divider, Flex, Heading, Spacer } from "@chakra-ui/react";
+import { Form, useActionData, useTransition } from "@remix-run/react";
+import React, { useState } from "react";
+import { z } from "zod";
+import type { action as createAction } from "~/routes/create";
+import type { PollEditLoaderData } from "~/routes/polls/$pollId/edit";
+import PollOption from "./PollOption";
+import { TextField } from "./TextField";
 
 type PollFormProps = {
-  poll?: PollEditLoaderData['poll']
-  isLoggedIn?: boolean
-}
+  poll?: PollEditLoaderData["poll"];
+  isLoggedIn?: boolean;
+};
 
 export const pollFormSchema = z.object({
   title: z.string().trim().min(1),
   description: z.string().optional(),
-  initialCredits: z.preprocess(val => Number(val), z.number().min(0).int("Initial Credits should be an integer")),
-  options: z.array(z.object({
-    id: z.preprocess(val => Number(val), z.number().nullable().optional()).optional(),
-    text: z.string().min(2)
-  })).min(2),
-})
+  initialCredits: z.preprocess(
+    (val) => Number(val),
+    z.number().min(0).int("Initial Credits should be an integer")
+  ),
+  options: z
+    .array(
+      z.object({
+        id: z
+          .preprocess((val) => Number(val), z.number().nullable().optional())
+          .optional(),
+        text: z.string().min(2),
+      })
+    )
+    .min(2),
+});
 
-export const PollForm: React.FC<PollFormProps> = ({ poll, isLoggedIn = false }) => {
-  const transition = useTransition()
+export const PollForm: React.FC<PollFormProps> = ({
+  poll,
+  isLoggedIn = false,
+}) => {
+  const transition = useTransition();
   const actionData = useActionData<typeof createAction>();
-  const [questionCount, setQuestionCount] = useState(poll?.options.length || 4);
+  const [questionCount, setQuestionCount] = useState(poll?.options.length || 2);
 
   const addQuestion = () => setQuestionCount((r) => r + 1);
 
   const removeQuestion = () => setQuestionCount((r) => r - 1);
 
   return (
-    <Form
-      className="container flex flex-col max-w-3xl p-4 pb-4 mx-auto space-y-4"
-      method="post"
-      action={poll ? `/poll/${poll.id}/edit` : '/create'}
-    >
-      <div className="w-full prose prose-p:mb-0">
-        <h1 className="my-8 text-center capitalize">
-          {poll ? `Editing poll ${poll.title}` : 'Create a New Poll'}
-        </h1>
-        <div className="w-full p-4 bg-red-300" hidden={!actionData?.errors?.formErrors.length}>
+    <Form method="post" action={poll ? `/polls/${poll.id}/edit` : "/create"}>
+      <div>
+        <Heading>
+          {poll ? `Editing poll ${poll.title}` : "Create a New Poll"}
+        </Heading>
+        {/* <div hidden={!actionData?.errors?.formErrors.length}>
           <h2>{actionData?.errors?.formErrors.join(',')}</h2>
-        </div>
+        </div> */}
         <TextField
           name="title"
-          label='Title'
-          error={actionData?.errors?.fieldErrors.title?.join(',')}
+          label="Title"
+          error={actionData?.errors?.fieldErrors.title?.join(",")}
           attr={{ required: true }}
           defaultValue={poll?.title}
         />
         <TextField
           name="description"
           multiline
-          label='Description'
-          error={actionData?.errors?.fieldErrors.description?.join(',')}
+          label="Description"
+          helperText="Give a desriptive text to your poll"
+          error={actionData?.errors?.fieldErrors.description?.join(",")}
           defaultValue={poll?.description}
         />
         <TextField
-          name='initialCredits'
+          name="initialCredits"
           label="Initial Credits"
-          type='number'
-          error={actionData?.errors?.fieldErrors.initialCredits?.join(',')}
-          defaultValue={poll?.initialCredits}
+          type="number"
+          error={actionData?.errors?.fieldErrors.initialCredits?.join(",")}
+          defaultValue={poll?.initialCredits || 100}
+          helperText="How many credits each participant should have initially?"
         />
-        {[...Array(questionCount)].map((_, i) => <div key={i}>
-          {poll ? <input hidden name={`options[${i}][id]`} defaultValue={poll?.options[i] ? poll?.options[i].id : ''} /> : null}
-          <TextField
-            name={`options[${i}][text]`}
-            label={`Option ${i + 1}`}
-            error={actionData?.errors?.fieldErrors.options?.join(',')}
-            defaultValue={poll?.options[i] ? poll?.options[i]?.text : ''}
-          />
-        </div>)}
-        <div className="flex space-x-2">
-          <button
-            type="button"
-            className="flex-grow uppercase btn bg-primary text-secondary3"
+        <Divider my={8} />
+        <Heading fontSize="2xl">Options</Heading>
+        {[...Array(questionCount)].map((_, i) => (
+          <div key={i}>
+            <PollOption
+              defaultValue={poll?.options[i] ? poll?.options[i]?.text : ""}
+              id={poll?.options[i] ? poll?.options[i].id : ""}
+              index={i}
+              error={actionData?.errors?.fieldErrors.options?.join(",")}
+              deleteQuestion={
+                i === questionCount - 1 ? removeQuestion : undefined
+              }
+            />
+          </div>
+        ))}
+        <Flex mt={4} justifyContent="end">
+          <Button type="submit" colorScheme="blue" disabled={transition.state == "loading"}>
+            {poll ? "Edit" : "Create"} Poll
+          </Button>
+          <Spacer />
+          <Button
             onClick={addQuestion}
-            disabled={transition.state == 'loading'}
-          >
-            Add Question
-          </button>
-          <button
-            type="button"
-            className="flex-grow uppercase btn bg-primary text-secondary3"
-            onClick={removeQuestion}
-            hidden={questionCount < 2}
-            disabled={transition.state == 'loading'}
-          >
-            Remove Question
-          </button>
-        </div>
-        <button
-          disabled={transition.state == 'loading'}
-          className="w-full mt-4 uppercase btn bg-accent2" type="submit">
-          {poll ? 'Edit' : 'Create'} Poll
-        </button>
+            disabled={transition.state == "loading"}
+            aria-label="Add Question"
+            rightIcon={<AddIcon />}
+            colorScheme="teal"
+          >Add Option</Button>
+        </Flex>
+
       </div>
     </Form>
-  )
-}
+  );
+};

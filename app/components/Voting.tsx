@@ -1,9 +1,11 @@
-import type {Option} from "@prisma/client";
-import type {SerializeFrom} from "@remix-run/node";
-import {useFetcher} from "@remix-run/react";
-import React, {useMemo, useState} from "react";
-import {useImmer} from "use-immer";
-import {z} from "zod";
+import { AddIcon, MinusIcon } from "@chakra-ui/icons";
+import { Button, Heading, HStack, IconButton, List, ListItem, Text } from "@chakra-ui/react";
+import type { Option } from "@prisma/client";
+import type { SerializeFrom } from "@remix-run/node";
+import { useFetcher } from "@remix-run/react";
+import React, { useMemo, useState } from "react";
+import { useImmer } from "use-immer";
+import { z } from "zod";
 
 type VotingProps = {
     options: SerializeFrom<(Option & { myVotes: number })[]>;
@@ -18,7 +20,7 @@ export const voteDiffSchema = z.array(z.object({
 
 export type VoteDiffs = z.infer<typeof voteDiffSchema>;
 
-const Voting: React.FC<VotingProps> = ({options, credits, updateCredits}) => {
+const Voting: React.FC<VotingProps> = ({ options, credits, updateCredits }) => {
     const fetcher = useFetcher()
     const [optionData, setOptions] = useImmer(options)
     const [error, setError] = useState('')
@@ -28,7 +30,7 @@ const Voting: React.FC<VotingProps> = ({options, credits, updateCredits}) => {
 
         options.forEach((option, index) => {
             if (option.myVotes !== optionData[index].myVotes) {
-                data.push({change: optionData[index].myVotes - option.myVotes, optionId: option.id})
+                data.push({ change: optionData[index].myVotes - option.myVotes, optionId: option.id })
             }
         })
 
@@ -38,7 +40,7 @@ const Voting: React.FC<VotingProps> = ({options, credits, updateCredits}) => {
     const submitVote = async () => {
         if (diffData.length > 0) {
             const formData = new FormData()
-            formData.set('data', JSON.stringify({options: diffData, credits, pollId: options[0].pollId }))
+            formData.set('data', JSON.stringify({ options: diffData, credits, pollId: options[0].pollId }))
             fetcher.submit(formData, {
                 action: '/vote?index',
                 method: 'post'
@@ -81,47 +83,41 @@ const Voting: React.FC<VotingProps> = ({options, credits, updateCredits}) => {
 
     return (
         <>
-            <div className="w-full p-4 mt-4 bg-red-300" hidden={!fetcher?.data && !error}>
-                <h2 className="text-lg">{fetcher?.data || error}</h2>
+            <div hidden={!fetcher?.data && !error}>
+                <h2>{fetcher?.data || error}</h2>
             </div>
-            <ul>
+            <List>
                 {optionData.map((option, index) => {
                     return (
-                        <li className="flex flex-col my-8" key={option.id}>
-                            <h4 className="text-2xl">{option.text}</h4>
-                            <div className="flex items-center justify-between mt-4 space-x-4">
-                                <button
+                        <ListItem my={8} key={option.id}>
+                            <Heading fontSize='md' textAlign={['center', 'left']}>{option.text}</Heading>
+                            <HStack mt={2} justify={['center', 'left']}>
+                                <IconButton
+                                    colorScheme='red'
+                                    aria-label="Decrease Vote"
+                                    icon={<MinusIcon fontSize='xs' />}
                                     onClick={decreaseVote(index)}
                                     disabled={option.myVotes === 0 || fetcher.state !== "idle"}
-                                    className="relative w-8 h-8 p-0 btn bg-accent3"
-                                >
-                                  <span
-                                      className="absolute text-2xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                                    -
-                                  </span>
-                                </button>
-                                <h4 className="my-0 text-xl">
-                                    Current Votes: <span className="text-secondary">{option.myVotes}</span>
-                                </h4>
-                                <button
+                                />
+                                <Text>
+                                    {option.myVotes}
+                                </Text>
+                                <IconButton
+                                    colorScheme='green'
+                                    aria-label="Increase Vote"
+                                    icon={<AddIcon fontSize='xs' />}
                                     onClick={increaseVote(index)}
-                                    className="relative w-8 h-8 p-0 btn bg-accent3"
                                     disabled={credits < (option.myVotes + 1) ** 2 || fetcher.state !== "idle"}
-                                >
-                                  <span
-                                      className="absolute text-2xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                                    +
-                                  </span>
-                                </button>
-                            </div>
-                        </li>
+                                />
+                            </HStack>
+                        </ListItem>
                     );
                 })}
-            </ul>
-            <button className="btn bg-primary w-full text-white" onClick={submitVote}
-                    disabled={diffData.length === 0 || fetcher.state !== "idle"}>
+            </List>
+            <Button colorScheme='blue' w='full' onClick={submitVote}
+                disabled={diffData.length === 0 || fetcher.state !== "idle"}>
                 {fetcher.state === 'submitting' ? "Submitting..." : "Submit Votes"}
-            </button>
+            </Button>
         </>
     );
 };

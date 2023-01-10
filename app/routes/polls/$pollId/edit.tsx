@@ -7,6 +7,7 @@ import React from 'react'
 import { PollForm, pollFormSchema } from '~/components/PollForm';
 import { db } from '~/utils/prisma.server'
 import { requireUserId } from '~/utils/session.server';
+import { Container } from '@chakra-ui/react';
 
 export const loader = async ({ params }: LoaderArgs) => {
     const pollId = params.pollId
@@ -43,7 +44,7 @@ export const action = async ({ request, params }: ActionArgs) => {
         await db.option.create({ data: { text: option.text, pollId: poll.id } })
     })
 
-    return redirect(`/poll/${pollId}`)
+    return redirect(`/polls/${pollId}`)
 }
 
 export type PollEditLoaderData = SerializeFrom<typeof loader>
@@ -51,11 +52,11 @@ export type PollEditLoaderData = SerializeFrom<typeof loader>
 const PollEdit = () => {
     const loaderData = useLoaderData<PollEditLoaderData>()
     return (
-        <div>
+        <Container maxW="container.md" pt={10} pb={20}>
             <PollForm
                 poll={loaderData.poll}
             />
-        </div>
+        </Container>
     )
 }
 
