@@ -17,8 +17,6 @@
     "@prisma/client": "^4.5.0",
     "@remix-run/node": "^1.4.3",
     "@remix-run/react": "^1.4.3",
-    "@remix-run/vercel": "^1.4.3",
-    "@vercel/node": "^2.6.1",
     "framer-motion": "^6",
     "immer": "^9.0.16",
     "jsonwebtoken": "^8.5.1",
