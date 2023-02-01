@@ -1,10 +1,10 @@
 import { Box, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
-import { useLoaderData } from "@remix-run/react";
-import React from "react";
+import { Await, useLoaderData } from "@remix-run/react";
+import React, { Suspense } from "react";
 import type { loader } from "~/routes/polls/$pollId";
 
 const Voters = () => {
-  const { voters } = useLoaderData<typeof loader>();
+  const { data } = useLoaderData<typeof loader>();
 
   return (
     <Box mt={6}>
@@ -20,18 +20,22 @@ const Voters = () => {
           </Tr>
         </Thead>
         <Tbody>
-          {voters.map((voter) => {
-            return (
-              <Tr key={voter.id}>
-                <Td>
-                    <h3>{voter.name}</h3>
-                </Td>
-                <Td align="center">
-                    <p>{voter.credits}</p>
-                </Td>
-              </Tr>
-            );
-          })}
+          <Suspense fallback={<div>Loading...</div>}>
+            <Await resolve={data}>
+              {({ voters }) => voters.map((voter) => {
+                return (
+                  <Tr key={voter.id}>
+                    <Td>
+                      <h3>{voter.name}</h3>
+                    </Td>
+                    <Td align="center">
+                      <p>{voter.credits}</p>
+                    </Td>
+                  </Tr>
+                );
+              })}
+            </Await>
+          </Suspense>
         </Tbody>
       </Table>
     </Box>
