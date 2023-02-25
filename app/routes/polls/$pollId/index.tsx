@@ -15,7 +15,6 @@ export const meta: MetaFunction = ({ params }) => ({
 });
 
 const getData = async (pollId: string, oauthId: string) => {
-    await new Promise(res => setTimeout(() => res(0), 3000))
     let myVotePageId: string | undefined = undefined;
     const poll = await db.poll.findFirst({
         where: { id: pollId },
